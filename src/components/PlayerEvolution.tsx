@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Player, RoundResult, GolfCourse } from '@/types/golf';
 import { TrendingUp } from 'lucide-react';
 
@@ -136,16 +136,11 @@ export default function PlayerEvolution({ players, results, course }: PlayerEvol
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={chartData}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="hole"
-                    label={{ value: 'Hoyo', position: 'insideBottom', offset: -5 }}
-                  />
-                  <YAxis
-                    label={{ value: 'Score Bajo Par (Acumulado)', angle: -90, position: 'insideLeft' }}
-                  />
+                  <XAxis dataKey="hole" />
+                  <YAxis />
                   <Tooltip
                     content={({ active, payload, label }) => {
                       if (active && payload && payload.length) {
@@ -166,27 +161,6 @@ export default function PlayerEvolution({ players, results, course }: PlayerEvol
                       }
                       return null;
                     }}
-                  />
-                  <Legend
-                    content={({ payload }) => (
-                      <div className="flex flex-wrap justify-center gap-4 mt-4">
-                        {payload?.map((entry: any) => {
-                          const player = players.find(p => p.id === entry.dataKey);
-                          if (!player) return null;
-                          return (
-                            <div key={entry.dataKey} className="flex items-center gap-2">
-                              <div
-                                className="w-4 h-4 rounded-full"
-                                style={{ backgroundColor: entry.color }}
-                              />
-                              <span className="text-sm">
-                                {player.firstName} {player.lastName}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
                   />
                   {visiblePlayers.map((player, index) => (
                     <Line
