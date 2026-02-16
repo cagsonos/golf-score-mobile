@@ -52,7 +52,7 @@ export default defineConfig(({ mode }) => ({
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 5,
               },
-              networkTimeoutSeconds: 10,
+              networkTimeoutSeconds: 30,
             },
           },
         ],

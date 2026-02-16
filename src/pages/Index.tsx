@@ -233,14 +233,16 @@ const Index = () => {
     <div
       className="min-h-screen relative"
       style={{
-        backgroundImage: `linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.08) 50%, rgba(21, 128, 61, 0.05) 100%), url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed'
+        backgroundImage: isMobile
+          ? 'linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(22,163,74,0.1) 50%, rgba(21,128,61,0.08) 100%)'
+          : `linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.08) 50%, rgba(21, 128, 61, 0.05) 100%), url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`,
+        backgroundSize: isMobile ? undefined : 'cover',
+        backgroundPosition: isMobile ? undefined : 'center',
+        backgroundAttachment: isMobile ? undefined : 'fixed'
       }}
     >
       {/* Overlay for better contrast */}
-      <div className="absolute inset-0 bg-background/20 backdrop-blur-[0.5px]" />
+      <div className="absolute inset-0 bg-background/85 md:bg-background/20 md:backdrop-blur-[0.5px]" />
 
       <div className="relative z-10 p-2 sm:p-4 pb-20 md:pb-4">
         <div className="container mx-auto">
@@ -260,7 +262,7 @@ const Index = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setCurrentStep('history')}
-                    className="bg-card/80 backdrop-blur-sm border-golf-green/30 hover:bg-golf-green/10"
+                    className="bg-card md:bg-card/80 md:backdrop-blur-sm border-golf-green/30 hover:bg-golf-green/10"
                   >
                     <History className="w-4 h-4" />
                     <span className="hidden sm:inline ml-2">Historial</span>
@@ -271,7 +273,7 @@ const Index = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setCurrentStep('settings')}
-                    className="bg-card/80 backdrop-blur-sm border-golf-green/30 hover:bg-golf-green/10"
+                    className="bg-card md:bg-card/80 md:backdrop-blur-sm border-golf-green/30 hover:bg-golf-green/10"
                   >
                     <SettingsIcon className="w-4 h-4" />
                     <span className="hidden sm:inline ml-2">Configuración</span>
@@ -284,7 +286,7 @@ const Index = () => {
             </p>
             {gameSession && currentStep !== 'history' && currentStep !== 'settings' && (
               <div className="mt-2 md:mt-4 flex justify-center">
-                <div className="bg-card/90 backdrop-blur-sm px-3 md:px-6 py-2 md:py-3 rounded-lg border border-golf-green/20 shadow-golf w-full md:w-auto">
+                <div className="bg-card md:bg-card/90 md:backdrop-blur-sm px-3 md:px-6 py-2 md:py-3 rounded-lg border border-golf-green/20 shadow-golf w-full md:w-auto">
                   <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
                     <div className="flex items-center gap-2 text-sm md:text-base">
                       <span className="font-medium text-golf-green truncate max-w-[200px]">{gameSession.course.name}</span>
@@ -361,7 +363,7 @@ const Index = () => {
           <div className="flex justify-center">
             <div className="w-full max-w-4xl">
               {currentStep === 'course' && (
-                <div className="bg-card/95 backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
+                <div className="bg-card md:bg-card/95 md:backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
                   <CourseSetup
                     existingCourses={courses}
                     onCourseSelected={handleCourseSelected}
@@ -370,7 +372,7 @@ const Index = () => {
               )}
 
               {currentStep === 'players' && gameSession && (
-                <div className="bg-card/95 backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
+                <div className="bg-card md:bg-card/95 md:backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
                   <PlayerSetup
                     players={players}
                     onPlayersUpdate={handlePlayersUpdate}
@@ -380,7 +382,7 @@ const Index = () => {
               )}
 
               {currentStep === 'scores' && gameSession && (
-                <div className="bg-card/95 backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
+                <div className="bg-card md:bg-card/95 md:backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
                   <ScoreEntry
                     players={players}
                     course={gameSession.course}
@@ -391,7 +393,7 @@ const Index = () => {
               )}
 
               {currentStep === 'results' && gameSession && (
-                <div className="bg-card/95 backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
+                <div className="bg-card md:bg-card/95 md:backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
                   <PlayerResultCards
                     players={players}
                     course={gameSession.course}
@@ -402,7 +404,7 @@ const Index = () => {
               )}
 
               {currentStep === 'comparison' && results.length > 0 && (
-                <div className="bg-card/95 backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
+                <div className="bg-card md:bg-card/95 md:backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
                   <PlayerComparison
                     players={players}
                     results={results}
@@ -412,7 +414,7 @@ const Index = () => {
               )}
 
               {currentStep === 'evolution' && results.length > 0 && gameSession && (
-                <div className="bg-card/95 backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
+                <div className="bg-card md:bg-card/95 md:backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
                   <PlayerEvolution
                     players={players}
                     results={results}
@@ -422,7 +424,7 @@ const Index = () => {
               )}
 
               {currentStep === 'settings' && (
-                <div className="bg-card/95 backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
+                <div className="bg-card md:bg-card/95 md:backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
                   <Settings
                     courses={courses}
                     onCoursesUpdate={handleCoursesUpdate}
@@ -433,7 +435,7 @@ const Index = () => {
               )}
 
               {currentStep === 'history' && (
-                <div className="bg-card/95 backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
+                <div className="bg-card md:bg-card/95 md:backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
                   <GameHistory
                     onLoadSession={handleLoadSession}
                     onBack={() => setCurrentStep('course')}
