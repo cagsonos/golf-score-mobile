@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { GameSession } from '@/types/golf';
 import { History, Calendar, Users, Trophy, Play, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { gameSessionsService } from '@/services/golfService';
 import { gameSessionService } from '@/services/gameSessionService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,7 +28,7 @@ export default function GameHistory({ onLoadSession, onBack }: GameHistoryProps)
   const loadSessions = async () => {
     try {
       setLoading(true);
-      const sessions = await gameSessionService.getAllSessions();
+      const sessions = await gameSessionsService.getAll();
       setSavedSessions(sessions);
     } catch (error) {
       console.error('Error loading sessions:', error);
