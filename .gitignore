@@ -24,3 +24,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Vercel CLI link
+.vercel
+
+# Windows + bash artifact (accidental `> nul` redirect)
+nul
