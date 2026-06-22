@@ -118,6 +118,9 @@ Si el modelo cambia, actualiza la línea (e.g., `Claude Opus 4.7`). No commitees
 
 Branch por defecto: `master`.
 
+### Cierre de sesión
+- **Commit de cierre (obligatorio):** al terminar la sesión, `git commit` local de TODOS los docs editados (CLAUDE.md, docs/*, etc.). Esto es una instrucción permanente del usuario, así que cuenta como el "pedido explícito" que exige la regla de arriba — no requiere preguntar de nuevo. Motivo: una fuente sin commitear queda marcada *stale* de forma permanente por el detector del LLM wiki (`../llm-wiki`); re-ingerir no la limpia, solo el commit. El push sigue la regla git del proyecto.
+
 ## Despliegue
 
 Vercel. La carpeta `.vercel/` está en el working tree (no trackeada). Builds usan el `package.json` estándar; el `.npmrc` con `legacy-peer-deps=true` es para que Vercel resuelva el árbol de dependencias.
