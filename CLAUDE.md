@@ -52,7 +52,8 @@ Flujo principal: `course → players → scores → results → comparison → e
 - `session_players.handicap` guarda el handicap **del momento de la partida** (no el actual del jugador). Crítico para que el historial sea consistente cuando un jugador actualiza su handicap.
 - `hole_results` tiene `UNIQUE(session_id, player_id, hole)`. Para actualizar resultados se borra y reinserta (ver `gameSessionsService.saveResults`).
 - RLS: políticas `USING (true)` — acceso público total. Si se agrega auth, hay que rehacer las policies.
-- Migraciones en [supabase/migrations/](supabase/migrations/).
+- Migraciones en [supabase/migrations/](supabase/migrations/). **No correr `supabase db push` ni `supabase link`:** la base actual se pobló copiando tablas y datos, así que las migraciones duplicarían el esquema.
+- **Base actual:** proyecto Supabase "Varios-CAG", ref `qfurtndfrvgxburrpvyc` (desde 2026-10-05). La anterior, `htbozacrgnzvvtsuzhpi`, era de AOM y ya no es nuestra.
 
 ### Lógica de golpes netos
 
@@ -89,7 +90,7 @@ Commit `91d3cd0` arregló freezing. Reglas que salieron de ahí:
 
 ### 5. Cliente Supabase con credenciales hardcodeadas
 
-[src/integrations/supabase/client.ts](src/integrations/supabase/client.ts) tiene URL y anon key inline. Es el patrón que dejó Lovable. Si se mueve a `.env`, hay que cambiar la URL con cuidado porque los assets PWA cacheados pueden reapuntar a la vieja.
+[src/integrations/supabase/client.ts](src/integrations/supabase/client.ts) tiene URL y anon key inline. Es el patrón que dejó Lovable. Si se mueve a `.env`, hay que cambiar la URL con cuidado porque los assets PWA cacheados pueden reapuntar a la vieja. Como el código **no** lee `import.meta.env`, el `.env` local y las variables `VITE_SUPABASE_*` del panel de Vercel no afectan a la app: para cambiar de base hay que editar `client.ts`.
 
 ### 6. Imports duplicados de `useToast`
 
