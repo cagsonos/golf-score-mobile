@@ -1,15 +1,7 @@
 import { Fragment } from 'react';
-import { Crown } from 'lucide-react';
 import { ComparisonResult, SkinsHoleResult } from '@/types/golf';
 import { cn } from '@/lib/utils';
-
-type Side = 'player1' | 'player2';
-
-// Un color por jugador: verde para el 1, azul tee para el 2 (nunca rojo: perder un hoyo no es un error).
-const SIDE = {
-  player1: { bg: 'bg-golf-green', text: 'text-golf-green', ring: 'ring-golf-green' },
-  player2: { bg: 'bg-golf-tee', text: 'text-golf-tee', ring: 'ring-golf-tee' },
-} as const;
+import { NetScore, SIDE, Scoreboard, Side } from '@/components/scoreParts';
 
 const MAX_COINS = 4;
 
@@ -22,17 +14,6 @@ function Coins({ count, side }: { count: number; side: Side }) {
       ))}
     </span>
   );
-}
-
-function NetScore({ value, won }: { value: number; won: Side | null }) {
-  if (won) {
-    return (
-      <span className={cn('inline-flex h-8 w-8 items-center justify-center rounded-full font-semibold text-white', SIDE[won].bg)}>
-        {value}
-      </span>
-    );
-  }
-  return <span className="inline-flex h-8 w-8 items-center justify-center text-muted-foreground">{value}</span>;
 }
 
 // Riel izquierdo: la línea punteada une los hoyos empatados con el hoyo que se lleva el pozo.
@@ -60,25 +41,13 @@ export default function SkinsBoard({ comparison }: { comparison: ComparisonResul
 
   return (
     <div className="space-y-6 md:mx-auto md:max-w-xl">
-      {/* Marcador */}
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg bg-muted px-4 py-5">
-        {(['player1', 'player2'] as const).map((side, i) => (
-          <Fragment key={side}>
-            {i === 1 && <span className="self-end pb-1 text-sm text-muted-foreground">skins</span>}
-            <div className={cn('min-w-0', i === 0 ? 'text-left' : 'text-right')}>
-              <div className={cn('flex items-center gap-1 text-sm font-medium', i === 1 && 'justify-end')}>
-                <span className={cn('h-2 w-2 shrink-0 rounded-full', SIDE[side].bg)} />
-                <span className="truncate">{names[side]}</span>
-                {skins.winner === side && <Crown className="h-4 w-4 shrink-0 text-yellow-500" aria-label="Ganador" />}
-              </div>
-              <div className={cn('text-5xl font-bold leading-none tabular-nums', SIDE[side].text)}>
-                {side === 'player1' ? skins.player1Skins : skins.player2Skins}
-              </div>
-            </div>
-          </Fragment>
-        ))}
-      </div>
-      {skins.winner === 'tie' && <p className="-mt-3 text-center text-sm text-muted-foreground">Empate en skins</p>}
+      <Scoreboard
+        names={names}
+        values={{ player1: skins.player1Skins, player2: skins.player2Skins }}
+        winner={skins.winner}
+        label="skins"
+        footnote={skins.winner === 'tie' ? 'Empate en skins' : undefined}
+      />
 
       {/* Hoyo por hoyo */}
       <div>
