@@ -124,4 +124,4 @@ Branch por defecto: `master`.
 
 ## Despliegue
 
-Vercel. La carpeta `.vercel/` está en el working tree (no trackeada). Builds usan el `package.json` estándar; el `.npmrc` con `legacy-peer-deps=true` es para que Vercel resuelva el árbol de dependencias.
+Vercel. **Desde 2026-10-16 el proyecto está conectado a GitHub:** cada push a `master` se publica solo en https://golf-score-mobile.vercel.app (también los commits que empuje Lovable). Antes no lo estaba y todo se desplegaba a mano con `vercel --prod`. La carpeta `.vercel/` está en el working tree (no trackeada). Builds usan el `package.json` estándar; el `.npmrc` con `legacy-peer-deps=true` es para que Vercel resuelva el árbol de dependencias.
