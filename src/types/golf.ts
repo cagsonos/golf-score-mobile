@@ -61,6 +61,14 @@ export interface MatchPlayResult {
   status: string; // "1UP", "2DOWN", "AS", etc.
 }
 
+export interface SkinsHoleResult {
+  hole: number;
+  player1Net: number;
+  player2Net: number;
+  value: number; // skins en juego en este hoyo (1 + acumulados)
+  winner: 'player1' | 'player2' | 'tie';
+}
+
 export interface ComparisonResult {
   player1: Player;
   player2: Player;
@@ -86,5 +94,12 @@ export interface ComparisonResult {
     frontNineStatus: string;
     backNineStatus: string;
     finalStatus: string;
+  };
+  skins: {
+    holeResults: SkinsHoleResult[];
+    player1Skins: number;
+    player2Skins: number;
+    unclaimedSkins: number; // empates al final: se pierden
+    winner: 'player1' | 'player2' | 'tie';
   };
 }

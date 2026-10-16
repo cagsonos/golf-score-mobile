@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Player, RoundResult, ComparisonResult } from '@/types/golf';
 import { createComparison } from '@/utils/golfCalculations';
-import { Trophy, Target, Medal, Crown, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trophy, Target, Medal, Crown, ChevronUp, ChevronDown, Coins } from 'lucide-react';
 
 interface PlayerComparisonProps {
   players: Player[];
@@ -176,14 +176,18 @@ export default function PlayerComparison({ players, results, onNewComparison }: 
       </Card>
 
       <Tabs defaultValue="medal" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="medal" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="medal" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
             <Medal className="w-4 h-4" />
             Medal Play
           </TabsTrigger>
-          <TabsTrigger value="match" className="flex items-center gap-2">
+          <TabsTrigger value="match" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
             <Target className="w-4 h-4" />
             Match Play
+          </TabsTrigger>
+          <TabsTrigger value="skins" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <Coins className="w-4 h-4" />
+            Skins
           </TabsTrigger>
         </TabsList>
 
@@ -338,6 +342,69 @@ export default function PlayerComparison({ players, results, onNewComparison }: 
                       ))}
                     </div>
                   </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="skins" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Resultados Skins (neto)</CardTitle>
+              <CardDescription>
+                Gana el hoyo quien tenga menos golpes netos. Si empatan, el skin se acumula al siguiente hoyo.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {/* Resumen */}
+                <div className="grid grid-cols-2 gap-4">
+                  <Card className="p-4 text-center">
+                    <div className="text-sm text-muted-foreground mb-1">{comparison.player1.firstName}</div>
+                    <div className="flex items-center justify-center">
+                      <div className="text-3xl font-bold text-golf-green">{comparison.skins.player1Skins}</div>
+                      {getWinnerIcon(comparison.skins.winner, 'player1')}
+                    </div>
+                    <div className="text-xs text-muted-foreground">skins</div>
+                  </Card>
+                  <Card className="p-4 text-center">
+                    <div className="text-sm text-muted-foreground mb-1">{comparison.player2.firstName}</div>
+                    <div className="flex items-center justify-center">
+                      <div className="text-3xl font-bold text-golf-green">{comparison.skins.player2Skins}</div>
+                      {getWinnerIcon(comparison.skins.winner, 'player2')}
+                    </div>
+                    <div className="text-xs text-muted-foreground">skins</div>
+                  </Card>
+                </div>
+                {comparison.skins.unclaimedSkins > 0 && (
+                  <p className="text-sm text-center text-muted-foreground">
+                    {comparison.skins.unclaimedSkins} {comparison.skins.unclaimedSkins === 1 ? 'skin quedó' : 'skins quedaron'} sin dueño (empate al final)
+                  </p>
+                )}
+
+                {/* Hoyo por hoyo */}
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-lg">Hoyo por Hoyo</h4>
+                  <div className="grid grid-cols-4 gap-2 px-3 text-xs text-muted-foreground font-medium">
+                    <div>Hoyo</div>
+                    <div className="text-center">{comparison.player1.firstName}</div>
+                    <div className="text-center">{comparison.player2.firstName}</div>
+                    <div className="text-right">Skins</div>
+                  </div>
+                  {comparison.skins.holeResults.map((hole) => (
+                    <div
+                      key={hole.hole}
+                      className={`${getHoleCardColor(hole.winner)} grid grid-cols-4 gap-2 items-center rounded-lg px-3 py-2 text-sm`}
+                    >
+                      <div className="font-bold">H{hole.hole}</div>
+                      <div className="text-center">{hole.player1Net}</div>
+                      <div className="text-center">{hole.player2Net}</div>
+                      <div className="text-right text-xs">
+                        {hole.winner === 'tie' ? 'Empate, acumula' : `+${hole.value}`}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </CardContent>

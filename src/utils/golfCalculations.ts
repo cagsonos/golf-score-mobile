@@ -1,4 +1,4 @@
-import { GolfCourse, Player, HoleResult, RoundResult, MatchPlayResult, ComparisonResult } from '@/types/golf';
+import { GolfCourse, Player, HoleResult, RoundResult, MatchPlayResult, SkinsHoleResult, ComparisonResult } from '@/types/golf';
 
 export const calculateNetStrokes = (
   strokes: number,
@@ -154,6 +154,48 @@ export const getMatchPlayNineStatus = (matchResults: MatchPlayResult[], startHol
   }
 };
 
+// Skins con golpes netos: el hoyo empatado acumula su skin al siguiente.
+// Si los últimos hoyos quedan empatados, esos skins se pierden.
+export const comparePlayersSkins = (
+  player1Result: RoundResult,
+  player2Result: RoundResult
+): ComparisonResult['skins'] => {
+  const holeResults: SkinsHoleResult[] = [];
+  let player1Skins = 0;
+  let player2Skins = 0;
+  let carry = 0;
+
+  for (let i = 0; i < 18; i++) {
+    const p1Net = player1Result.holeResults[i].netStrokes;
+    const p2Net = player2Result.holeResults[i].netStrokes;
+    const value = carry + 1;
+
+    let winner: 'player1' | 'player2' | 'tie';
+    if (p1Net < p2Net) {
+      winner = 'player1';
+      player1Skins += value;
+      carry = 0;
+    } else if (p1Net > p2Net) {
+      winner = 'player2';
+      player2Skins += value;
+      carry = 0;
+    } else {
+      winner = 'tie';
+      carry = value;
+    }
+
+    holeResults.push({ hole: i + 1, player1Net: p1Net, player2Net: p2Net, value, winner });
+  }
+
+  return {
+    holeResults,
+    player1Skins,
+    player2Skins,
+    unclaimedSkins: carry,
+    winner: player1Skins > player2Skins ? 'player1' : player1Skins < player2Skins ? 'player2' : 'tie'
+  };
+};
+
 export const createComparison = (
   player1: Player,
   player2: Player,
@@ -190,6 +232,7 @@ export const createComparison = (
       frontNineStatus: getMatchPlayNineStatus(matchPlayResults, 1, 9),
       backNineStatus: getMatchPlayNineStatus(matchPlayResults, 10, 18),
       finalStatus: getMatchPlayStatus(matchPlayResults, 18)
-    }
+    },
+    skins: comparePlayersSkins(result1, result2)
   };
 };
