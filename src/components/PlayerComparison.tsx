@@ -146,7 +146,7 @@ export default function PlayerComparison({ players, results, onNewComparison }: 
             <CardHeader>
               <CardTitle>Resultados Medal Play (neto)</CardTitle>
               <CardDescription>
-                Suma de golpes netos de la ronda. El número grande es el neto; debajo va el bruto.
+                Suma de golpes netos de la ronda. El número grande es el neto; debajo va el gross.
               </CardDescription>
             </CardHeader>
             <CardContent>

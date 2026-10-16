@@ -39,7 +39,7 @@ export default function MedalBoard({
       <Scoreboard
         names={names}
         values={{ player1: total.player1Score, player2: total.player2Score }}
-        sub={{ player1: `bruto ${result1.totalStrokes}`, player2: `bruto ${result2.totalStrokes}` }}
+        sub={{ player1: `gross ${result1.totalStrokes}`, player2: `gross ${result2.totalStrokes}` }}
         winner={total.winner}
         label="neto"
         footnote={footnote}
@@ -70,7 +70,7 @@ export default function MedalBoard({
                       won={won === side ? side : null}
                       size={isTotal ? 'lg' : 'sm'}
                     />
-                    <span className="whitespace-nowrap text-[11px] tabular-nums text-muted-foreground">bruto {gross[i]}</span>
+                    <span className="whitespace-nowrap text-[11px] tabular-nums text-muted-foreground">gross {gross[i]}</span>
                   </span>
                 ))}
                 <span className="text-right text-sm">
