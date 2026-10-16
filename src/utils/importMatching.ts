@@ -44,6 +44,9 @@ export const splitFullName = (fullName: string): { firstName: string; lastName: 
   return { firstName: titleCase(parts.slice(0, -1).join(' ')), lastName: titleCase(parts[parts.length - 1]) };
 };
 
+// players.code es UNIQUE aquí: cada jugador importado lleva un código derivado de su id allá.
+export const newPlayerCode = (remotePlayerId: string): string => `HC-${remotePlayerId.slice(0, 8)}`;
+
 // Esta app solo maneja azul, blanco y rojo.
 export const mapTeeColor = (color: string): Player['teeColor'] =>
   color === 'blue' || color === 'red' ? color : 'white';

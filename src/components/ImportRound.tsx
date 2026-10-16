@@ -8,7 +8,7 @@ import { Download, ChevronRight, ChevronLeft, AlertTriangle } from 'lucide-react
 import { GameSession, GolfCourse, Player } from '@/types/golf';
 import { golfCoursesService, playersService, gameSessionsService } from '@/services/golfService';
 import { handicapCalcService, RemoteDay, RemoteRound } from '@/services/handicapCalcService';
-import { suggestCourse, suggestPlayer, splitFullName, mapTeeColor } from '@/utils/importMatching';
+import { suggestCourse, suggestPlayer, splitFullName, mapTeeColor, newPlayerCode } from '@/utils/importMatching';
 import { calculateRoundResult } from '@/utils/golfCalculations';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -185,7 +185,7 @@ export default function ImportRound({ onBack, onImported }: ImportRoundProps) {
         if (target === NEW) {
           const created = await playersService.create({
             ...splitFullName(r.playerName),
-            code: '',
+            code: newPlayerCode(r.playerId),
             handicap: hcp,
             teeColor: mapTeeColor(r.teeColor),
           });
@@ -207,7 +207,8 @@ export default function ImportRound({ onBack, onImported }: ImportRoundProps) {
       toast({ title: 'Ronda importada', description: `${sessionPlayers.length} jugadores, ${formatDate(day.date)}` });
       onImported({ id: sessionId, course, date, players: sessionPlayers, results });
     } catch (error) {
-      fail('No se pudo guardar la ronda importada', error);
+      const detail = error instanceof Error ? error.message : (error as { message?: string })?.message;
+      fail(detail ? `No se pudo guardar la ronda importada: ${detail}` : 'No se pudo guardar la ronda importada', error);
     } finally {
       setSaving(false);
     }

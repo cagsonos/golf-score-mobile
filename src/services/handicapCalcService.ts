@@ -9,6 +9,7 @@ export interface RemoteDay {
 
 export interface RemoteRound {
   id: string;
+  playerId: string;
   playerName: string;
   teeColor: string;
   grossTotal: number;
@@ -34,6 +35,7 @@ export interface RemoteTee {
 type RoundRow = { played_at: string; tee: { course: { name: string } | null } | null };
 type DetailRow = {
   id: string;
+  player_id: string;
   player_name: string;
   course_name: string;
   tee_color: string;
@@ -75,6 +77,7 @@ export const handicapCalcService = {
       .filter((r) => r.course_name === courseName && r.score_differential !== null)
       .map((r) => ({
         id: r.id,
+        playerId: r.player_id,
         playerName: r.player_name,
         teeColor: r.tee_color,
         grossTotal: r.gross_total ?? 0,
