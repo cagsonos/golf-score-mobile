@@ -66,6 +66,8 @@ netStrokes = max(strokes - strokesReceived, 1)
 
 Mínimo 1 golpe neto por hoyo (no se puede quedar en 0). El `holeHandicap` depende del color de tee del jugador.
 
+**Handicap negativo ("plus", ej. −5 = +5):** desde 2026-10-16 el jugador *devuelve* golpes empezando por los hoyos más fáciles (índice 18, 17, …): con −5 suma 1 golpe en los índices 14 a 18 y nada en el resto. Antes la fórmula de arriba sumaba 1 golpe en los 18 hoyos.
+
 ## Gotchas (cosas no obvias del código)
 
 ### 1. Hay dos capas de servicios paralelas

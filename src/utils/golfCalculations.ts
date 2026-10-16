@@ -5,6 +5,12 @@ export const calculateNetStrokes = (
   handicap: number,
   holeHandicap: number
 ): number => {
+  if (handicap < 0) {
+    // Handicap "plus" (ej. -5): devuelve golpes empezando por los hoyos más fáciles (índice 18, 17, ...).
+    const plus = -handicap;
+    const strokesGiven = Math.floor(plus / 18) + (plus % 18 > 18 - holeHandicap ? 1 : 0);
+    return Math.max(strokes + strokesGiven, 1);
+  }
   const strokesReceived = Math.floor(handicap / 18) + (handicap % 18 >= holeHandicap ? 1 : 0);
   return Math.max(strokes - strokesReceived, 1);
 };

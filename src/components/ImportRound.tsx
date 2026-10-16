@@ -26,7 +26,7 @@ interface PlayerChoice {
 }
 
 const NEW = 'new';
-const MIN_HCP = 0;
+const MIN_HCP = -10; // handicap plus (+5 se escribe -5)
 const MAX_HCP = 54;
 
 const TEE: Record<string, { label: string; dot: string }> = {
@@ -110,8 +110,9 @@ export default function ImportRound({ onBack, onImported }: ImportRoundProps) {
     try {
       setLoading(true);
       setDay(d);
-      setSelected(new Set());
-      setRounds(await handicapCalcService.getDayRounds(d.date, d.courseName));
+      const dayRounds = await handicapCalcService.getDayRounds(d.date, d.courseName);
+      setRounds(dayRounds);
+      setSelected(new Set(dayRounds.map((r) => r.id)));
       setStep('players');
     } catch (error) {
       fail('No se pudieron leer los jugadores de esa jornada', error);
@@ -128,6 +129,7 @@ export default function ImportRound({ onBack, onImported }: ImportRoundProps) {
       return next;
     });
 
+  const allSelected = rounds.length > 0 && selected.size === rounds.length;
   const selectedRounds = useMemo(() => rounds.filter((r) => selected.has(r.id)), [rounds, selected]);
 
   const goConfirm = () => {
@@ -276,6 +278,18 @@ export default function ImportRound({ onBack, onImported }: ImportRoundProps) {
           )
         ) : step === 'players' ? (
           <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground tabular-nums">
+                {selected.size} de {rounds.length} seleccionados
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSelected(allSelected ? new Set() : new Set(rounds.map((r) => r.id)))}
+              >
+                {allSelected ? 'Quitar todos' : 'Seleccionar todos'}
+              </Button>
+            </div>
             <ol className="divide-y rounded-lg border">
               {rounds.map((r) => {
                 const tee = teeOf(r.teeColor);
@@ -377,7 +391,6 @@ export default function ImportRound({ onBack, onImported }: ImportRoundProps) {
                         </div>
                         <div>
                           <Input
-                            inputMode="numeric"
                             value={choice.handicap}
                             onChange={(e) => setChoice(r.id, { handicap: e.target.value })}
                             aria-label={`Handicap de ${titleName(r.playerName)}`}
