@@ -233,6 +233,18 @@ export const gameSessionsService = {
     });
   },
 
+  // ¿Ya hay una partida ese día en ese campo? (fecha como YYYY-MM-DD)
+  async existsOn(courseId: string, dateString: string): Promise<boolean> {
+    const { count, error } = await supabase
+      .from('game_sessions')
+      .select('id', { count: 'exact', head: true })
+      .eq('course_id', courseId)
+      .eq('date', dateString);
+
+    if (error) throw error;
+    return (count ?? 0) > 0;
+  },
+
   async create(sessionData: { courseId: string; date: Date; players: Player[] }): Promise<string> {
     // Format date correctly to avoid timezone issues
     // Get the local date components and format as YYYY-MM-DD

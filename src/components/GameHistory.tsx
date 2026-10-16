@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { GameSession } from '@/types/golf';
-import { History, Calendar, Users, Trophy, Play, Trash2 } from 'lucide-react';
+import { History, Calendar, Users, Trophy, Play, Trash2, Download } from 'lucide-react';
 import { format } from 'date-fns';
 import { gameSessionsService } from '@/services/golfService';
 import { gameSessionService } from '@/services/gameSessionService';
@@ -14,9 +14,10 @@ import { useToast } from '@/hooks/use-toast';
 interface GameHistoryProps {
   onLoadSession: (session: GameSession) => void;
   onBack: () => void;
+  onImport: () => void;
 }
 
-export default function GameHistory({ onLoadSession, onBack }: GameHistoryProps) {
+export default function GameHistory({ onLoadSession, onBack, onImport }: GameHistoryProps) {
   const [savedSessions, setSavedSessions] = useState<GameSession[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -80,9 +81,15 @@ export default function GameHistory({ onLoadSession, onBack }: GameHistoryProps)
               Partidas anteriores
             </CardDescription>
           </div>
-          <Button variant="outline" size="sm" onClick={onBack} className="bg-white text-golf-green hover:bg-white/90">
-            Volver
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={onImport} className="bg-white text-golf-green hover:bg-white/90">
+              <Download className="w-4 h-4 mr-1" />
+              Importar
+            </Button>
+            <Button variant="outline" size="sm" onClick={onBack} className="bg-white text-golf-green hover:bg-white/90">
+              Volver
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="p-3 sm:p-6">

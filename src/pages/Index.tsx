@@ -5,6 +5,7 @@ import PlayerSetup from '@/components/PlayerSetup';
 import ScoreEntry from '@/components/ScoreEntry';
 import PlayerComparison from '@/components/PlayerComparison';
 import GameHistory from '@/components/GameHistory';
+import ImportRound from '@/components/ImportRound';
 import { Button } from '@/components/ui/button';
 import { Settings as SettingsIcon, History, MapPin, Users, Trophy, Target, FileText } from 'lucide-react';
 import PlayerResultCards from '@/components/PlayerResultCards';
@@ -15,7 +16,7 @@ import { golfCoursesService, gameSessionsService } from '@/services/golfService'
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-type AppStep = 'course' | 'players' | 'scores' | 'comparison' | 'results' | 'evolution' | 'history' | 'settings';
+type AppStep = 'course' | 'players' | 'scores' | 'comparison' | 'results' | 'evolution' | 'history' | 'settings' | 'import';
 
 const Index = () => {
   const { toast } = useToast();
@@ -204,6 +205,7 @@ const Index = () => {
       case 'settings':
         return true;
       case 'history':
+      case 'import':
         return true;
       default:
         return false;
@@ -227,7 +229,7 @@ const Index = () => {
     }
   };
 
-  const showMainNav = currentStep !== 'settings' && currentStep !== 'history';
+  const showMainNav = currentStep !== 'settings' && currentStep !== 'history' && currentStep !== 'import';
 
   return (
     <div
@@ -284,7 +286,7 @@ const Index = () => {
             <p className="text-muted-foreground text-sm md:text-lg">
               Registra y compara resultados de golf
             </p>
-            {gameSession && currentStep !== 'history' && currentStep !== 'settings' && (
+            {gameSession && currentStep !== 'history' && currentStep !== 'settings' && currentStep !== 'import' && (
               <div className="mt-2 md:mt-4 flex justify-center">
                 <div className="bg-card md:bg-card/90 md:backdrop-blur-sm px-3 md:px-6 py-2 md:py-3 rounded-lg border border-golf-green/20 shadow-golf w-full md:w-auto">
                   <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
@@ -439,6 +441,16 @@ const Index = () => {
                   <GameHistory
                     onLoadSession={handleLoadSession}
                     onBack={() => setCurrentStep('course')}
+                    onImport={() => setCurrentStep('import')}
+                  />
+                </div>
+              )}
+
+              {currentStep === 'import' && (
+                <div className="bg-card md:bg-card/95 md:backdrop-blur-sm rounded-xl p-3 sm:p-6 border border-golf-green/20 shadow-golf">
+                  <ImportRound
+                    onBack={() => setCurrentStep('history')}
+                    onImported={handleLoadSession}
                   />
                 </div>
               )}
@@ -446,7 +458,7 @@ const Index = () => {
           </div>
 
           {/* Navigation Help - desktop only */}
-          {currentStep !== 'course' && currentStep !== 'settings' && currentStep !== 'history' && (
+          {currentStep !== 'course' && currentStep !== 'settings' && currentStep !== 'history' && currentStep !== 'import' && (
             <div className="hidden md:block text-center mt-8 space-y-2">
               <div className="bg-card/80 backdrop-blur-sm rounded-lg p-4 border border-golf-green/20 inline-block">
                 <p className="text-sm text-muted-foreground mb-2">

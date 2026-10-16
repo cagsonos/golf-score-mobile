@@ -96,7 +96,19 @@ Commit `91d3cd0` arregló freezing. Reglas que salieron de ahí:
 
 Existen [src/hooks/use-toast.ts](src/hooks/use-toast.ts) y [src/components/ui/use-toast.ts](src/components/ui/use-toast.ts). Usar `@/hooks/use-toast` (es el que usa el resto del código).
 
-### 7. Entorno Windows + bash
+### 7. Importar desde "Handicap Calulator" (solo lectura)
+
+Historial → **Importar** ([src/components/ImportRound.tsx](src/components/ImportRound.tsx)) trae rondas de la app del usuario `D:\AI\Handicap Calulator` (Supabase "CRS", ref `jhollumqkdrdmzftmcry`, esquema **`handicap`**) y las guarda aquí como partida.
+
+- **Esa base nunca se escribe.** El cliente ([src/integrations/handicapCalc/client.ts](src/integrations/handicapCalc/client.ts)) y el servicio ([src/services/handicapCalcService.ts](src/services/handicapCalcService.ts)) solo hacen `select` y la RPC `get_rounds_detail`. Antes de commitear: `grep -nE "\.(insert|update|upsert|delete)\(" src/integrations/handicapCalc src/services/handicapCalcService.ts` debe salir vacío.
+- Lectura **sin sesión** con la llave publicable: allá la lectura es pública para `anon` y un usuario logueado no ve nada.
+- En `handicap.players` solo se pueden leer columnas explícitas: nunca `select *`.
+- Allá se guarda el handicap **de campo** por ronda (`course_handicap`). Es el que se propone; el usuario lo puede cambiar antes de guardar, y solo vale para esa partida (`session_players.handicap`). El handicap del jugador aquí no se toca.
+- Nombres distintos ("La Sabana" / "Club Campestre de la Sabana", "CARLOS GUTIERREZ" / "Carlos Gutiérrez"): el emparejamiento está en [src/utils/importMatching.ts](src/utils/importMatching.ts) y el usuario lo confirma.
+- Allá hay tees amarillo/verde/negro; aquí solo azul/blanco/rojo. Jugadores nuevos con esos colores quedan como `white`. No hay putts: se guardan en 0.
+- En La Sabana, la dificultad de los hoyos 2 y 4 está al revés entre las dos apps (allá 11/13, aquí 13/11). El campo de aquí no se cambió.
+
+### 8. Entorno Windows + bash
 
 Shell es bash sobre Windows 11 — usa siempre `/dev/null`, nunca `nul`/`NUL`. Si se hace `> nul` por accidente, bash lo crea como archivo literal en la raíz del repo. El [.gitignore](.gitignore) ahora excluye `.vercel/` y `nul` para que no reaparezcan en `git status`.
 
